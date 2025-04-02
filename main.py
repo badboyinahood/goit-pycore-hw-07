@@ -107,6 +107,7 @@ class AddressBook(UserDict):
                     upcoming.append(f"{record.name.value}: {record.birthday}")
         return "\n".join(upcoming) if upcoming else "No upcoming birthdays."
 
+
 def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
@@ -119,6 +120,18 @@ def main():
             break
         elif command == "hello":
             print("How can I help you?")
+        elif command.startswith("add-birthday"):
+            args = input("Enter name and birthday (DD.MM.YYYY): ").split()
+            if len(args) < 2:
+                print("Invalid input.")
+                continue
+            name, birthday = args
+            record = book.find(name)
+            if record:
+                record.add_birthday(birthday)
+                print("Birthday added.")
+            else:
+                print("Contact not found.")
         elif command.startswith("add"):
             args = input("Enter name and phone: ").split()
             if len(args) < 2:
@@ -148,18 +161,6 @@ def main():
             print(record if record else "Contact not found.")
         elif command == "all":
             print("\n".join(str(r) for r in book.data.values()) or "No contacts found.")
-        elif command.startswith("add-birthday"):
-            args = input("Enter name and birthday (DD.MM.YYYY): ").split()
-            if len(args) < 2:
-                print("Invalid input.")
-                continue
-            name, birthday = args
-            record = book.find(name)
-            if record:
-                record.add_birthday(birthday)
-                print("Birthday added.")
-            else:
-                print("Contact not found.")
         elif command.startswith("show-birthday"):
             args = input("Enter name: ").split()
             name = args[0] if args else ""
